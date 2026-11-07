@@ -11,6 +11,10 @@ import { createClient, chains } from "./vendor/genlayer.js";
 const ENDPOINT = "https://studio.genlayer.com/api";
 const CHAIN_ID_HEX = "0xf22f"; // 61999, Studionet
 const ZERO = "0x0000000000000000000000000000000000000000";
+// The deployment used escalation_window=3600 and the contract exposes no
+// getter for it. Change this if you deploy with a different window; the
+// on-chain check in settle() is the authority either way.
+const ESCALATION_WINDOW = 3600;
 
 const $ = (id) => document.getElementById(id);
 
@@ -310,7 +314,7 @@ function actionButtons(e) {
     buttons.push({ label: "Judge (round 1)", fn: "judge", args: [BigInt(e.id)] });
   }
   if (e.status === "JUDGED") {
-    const open = now <= e.judgedAt + 3600; // escalation window, from the deployment
+    const open = now <= e.judgedAt + ESCALATION_WINDOW;
     if (open && mine(e.client)) {
       buttons.push({ label: "Escalate with counter evidence", fn: "escalate", needsUrl: "Counter evidence URL:" });
     }
@@ -339,7 +343,7 @@ function escrowCard(e) {
   const active = !["SETTLED", "REFUNDED"].includes(e.status);
   const clock =
     e.status === "FUNDED" ? `deadline in <code>${countdown(e.deadline)}</code>`
-    : e.status === "JUDGED" ? `escalation window <code>${countdown(e.judgedAt + 3600)}</code>`
+    : e.status === "JUDGED" ? `escalation window <code>${countdown(e.judgedAt + ESCALATION_WINDOW)}</code>`
     : "";
 
   const verdictBlock =
