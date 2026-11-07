@@ -25,9 +25,11 @@ Settle
 **标志** - upload `app/logo.png` (512×512, PNG). One bar split 70/30: the payout
 table, in one shape.
 
-**主标签 / 标签 1 / 标签 2** - 主标签 `交易市场` (Marketplaces); the sub-tag list
-that appears under it decides the rest. If `DeFi` is offered as a primary and
-`Escrow` as a topic, that pair is even closer to what this is.
+**主标签 / 标签 1 / 标签 2** - 主标签 `交易市场` (Marketplaces), then pick the
+payment/escrow-flavoured topics that appear. If that list is unhelpful, fall back
+to 主标签 `争议解决` with 标签 1 `托管资金申领` (Escrow Claims) and 标签 2
+`申诉审核` (Appeal Review) - those are the portal's own words for exactly this
+flow, even though the first project already sits under that primary.
 
 ## 02 一句话简介
 
