@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Settle - escrow that pays in basis points</title>
+<meta name="description" content="Fund work against acceptance criteria written in plain words. A deliverable is judged against the criteria and the payout lands in basis points - full, half or none. Disputes get an adversarial second round." />
+<link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+<header class="bar">
+  <div class="brand">
+    <span class="mark" aria-hidden="true"></span>
+    <div>
+      <h1>Settle</h1>
+      <p>escrow that pays in basis points, not yes/no</p>
+    </div>
+  </div>
+  <div class="bar-right">
+    <span class="pill" id="chainPill">Studionet</span>
+    <button class="btn btn-ghost" id="connectBtn">Connect wallet</button>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div>
+      <h2>Most escrows can only answer "was it signed". This one answers "is it good enough".</h2>
+      <p class="lede">
+        Write acceptance criteria in plain words, lock funds, and the provider
+        delivers a URL. Validators fetch the artifact and judge it against the
+        criteria; the payout is a percentage - full, half or none. The client can
+        contest with counter evidence, and the second round weighs both documents.
+      </p>
+    </div>
+    <dl class="stats">
+      <div><dt>escrows</dt><dd id="statEscrows">-</dd></div>
+      <div><dt>in progress</dt><dd id="statActive">-</dd></div>
+      <div><dt>locked</dt><dd id="statLocked">-</dd></div>
+    </dl>
+  </section>
+
+  <section class="contract" id="contractBar">
+    <label for="addressInput">Contract</label>
+    <input id="addressInput" spellcheck="false" value="0x28Ee25d23d30f8E7C53eF54DBf0dF328813E3105" />
+    <button class="btn btn-ghost" id="reloadBtn">Load</button>
+    <a class="link" id="explorerLink" target="_blank" rel="noreferrer">explorer</a>
+  </section>
+
+  <section class="grid">
+    <form class="card composer" id="composer">
+      <h3>Fund an escrow</h3>
+      <label>Provider <span class="hint">the account that will deliver</span>
+        <input id="provider" spellcheck="false" placeholder="0x…" />
+      </label>
+      <label>Acceptance criteria <span class="hint">plain words, judged later, max 2048 chars</span>
+        <textarea id="criteria" rows="4" maxlength="2048" placeholder="A README section of at least 300 words explaining deployment, with one working command block."></textarea>
+      </label>
+      <label>Amount <span class="hint">GEN, minimum 0.01</span>
+        <input id="amount" inputmode="decimal" value="0.05" />
+      </label>
+      <label>Deadline <span class="hint">days the provider has to deliver</span>
+        <input id="days" inputmode="numeric" value="3" />
+      </label>
+      <button class="btn btn-primary" type="submit" id="fundBtn">Lock funds</button>
+      <p class="fine">If nothing is delivered by the deadline, the full amount is refunded to you.</p>
+    </form>
+
+    <aside class="card legend">
+      <h3>How it settles</h3>
+      <ol class="steps">
+        <li><b>FUNDED</b> - criteria pinned, clock running. No model yet.</li>
+        <li><b>DELIVERED</b> - the provider posted one artifact URL.</li>
+        <li><b>JUDGED</b> - validators read the artifact against the criteria: ACCEPT / PARTIAL / REJECT, payout 100% / 50% / 0%.</li>
+        <li><b>DISPUTED</b> - the client filed counter evidence inside the window. Round two is adversarial: both documents.</li>
+        <li><b>SETTLED</b> - the split is credited. Withdraw sends it out.</li>
+      </ol>
+      <p class="fine">
+        Deliver nothing by the deadline and <b>refund_expired</b> makes the client
+        whole - that path never touches a model.
+      </p>
+    </aside>
+  </section>
+
+  <section class="claims">
+    <div class="claims-head">
+      <h3>Escrows</h3>
+      <div class="bar-right">
+        <button class="btn btn-ghost" id="withdrawBtn" hidden>Withdraw</button>
+        <button class="btn btn-ghost" id="refreshBtn">Refresh</button>
+      </div>
+    </div>
+    <div id="escrowsList" class="claims-list">
+      <p class="empty">Loading escrows…</p>
+    </div>
+  </section>
+</main>
+
+<aside class="txlog" id="txlog" aria-live="polite">
+  <div class="txlog-head">
+    <span>Transaction</span>
+    <button id="txlogClose" aria-label="close">×</button>
+  </div>
+  <div class="txlog-body" id="txlogBody"></div>
+</aside>
+
+<footer>
+  <p>
+    Source and design notes:
+    <a href="https://github.com/IanCao/settle" target="_blank" rel="noreferrer">IanCao/settle</a>.
+    Read-only browsing works without a wallet; writing needs one on Studionet.
+  </p>
+</footer>
+
+<script type="module" src="./app.js"></script>
+</body>
+</html>
